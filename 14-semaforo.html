@@ -1,0 +1,23 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Il semaforo</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.col{border-radius:16px;padding:16px;min-height:300px;color:#fff}.col h2{margin:0 0 4px;font-size:24px}.col .d{font-size:16px;opacity:.9;margin-bottom:12px}
+.it{background:rgba(255,255,255,.95);color:var(--ink);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:19px;display:flex;justify-content:space-between;gap:8px;align-items:center}.it .mv{font-size:14px;opacity:.6}
+</style></head><body><main>
+<h1>Il semaforo della classe 2B</h1><p class="sub">Scrivi una richiesta che si potrebbe fare a un'IA e mettila nel colore giusto.</p>
+<div class="row" style="margin-bottom:14px"><input id="in" style="flex:1" placeholder="Una richiesta a un'IA…"><button style="background:var(--verde);color:#fff" onclick="add('v')">Verde</button><button style="background:var(--giallo);color:#fff" onclick="add('g')">Giallo</button><button style="background:var(--rosso);color:#fff" onclick="add('r')">Rosso</button><button onclick="window.print()">Stampa</button></div>
+<div class="grid3">
+<div class="col" style="background:var(--verde)"><h2>Verde</h2><div class="d">allena il pensiero</div><div id="v"></div></div>
+<div class="col" style="background:var(--giallo)"><h2>Giallo</h2><div class="d">dipende</div><div id="g"></div></div>
+<div class="col" style="background:var(--rosso)"><h2>Rosso</h2><div class="d">sostituisce il pensiero</div><div id="r"></div></div></div>
+<script>
+const d={v:["Non ho capito il teorema di Pitagora, spiegamelo con un esempio","Fammi cinque domande sul capitolo che ho studiato","Leggi il mio paragrafo e dimmi cosa non è chiaro, senza riscriverlo","Fammi un esempio in più"],g:["Correggi l'ortografia del mio tema","Riassumi un testo che ho già letto","Dammi una scaletta da cui partire"],r:["Risolvi questa equazione e dammi solo il risultato","Scrivi il riassunto del libro che dovevo leggere","Scrivimi il tema"]};
+const ord=['v','g','r'];function render(){for(const k in d)document.getElementById(k).innerHTML=d[k].map((t,i)=>`<div class="it"><span>${t}</span><span class="mv"><span onclick="mv('${k}',${i},-1)" style="cursor:pointer">◀</span> <span onclick="mv('${k}',${i},1)" style="cursor:pointer">▶</span></span></div>`).join('')}function mv(k,i,dir){const j=ord.indexOf(k)+dir;if(j<0||j>2)return;d[ord[j]].push(d[k].splice(i,1)[0]);render()}function add(k){const t=document.getElementById('in').value.trim();if(!t)return;d[k].push(t);document.getElementById('in').value='';render()}render();
+</script></main></body></html>

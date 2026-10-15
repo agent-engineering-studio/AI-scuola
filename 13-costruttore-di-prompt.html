@@ -1,0 +1,25 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Il costruttore di prompt</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+textarea{width:100%;min-height:90px}.lab{font-weight:700;margin-bottom:6px;display:flex;gap:8px;align-items:center}.dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+.out{font-size:22px;line-height:1.5}.c1{background:#ffe8cc}.c2{background:#d0ebff}.c3{background:#d3f9d8}
+</style></head><body><main>
+<h1>Il costruttore di prompt</h1><p class="sub">Contesto, compito, formato. Il prompt si compone da solo.</p>
+<div class="grid2">
+<div><div class="card" style="margin-bottom:12px"><div class="lab mute">La prima versione, quella vaga</div><textarea id="v">Dimmi qualcosa su Dante.</textarea></div>
+<div class="card" style="margin-bottom:12px"><div class="lab"><span class="dot" style="background:#f08c00"></span>Contesto: chi sono e perché lo chiedo</div><textarea id="a">Frequento la prima superiore e domani ho un'interrogazione di italiano su Dante.</textarea></div>
+<div class="card" style="margin-bottom:12px"><div class="lab"><span class="dot" style="background:#1971c2"></span>Compito: cosa voglio esattamente</div><textarea id="b">Spiegami la struttura della Divina Commedia e perché Dante la scrisse in volgare.</textarea></div>
+<div class="card"><div class="lab"><span class="dot" style="background:#2f9e44"></span>Formato: come voglio la risposta</div><textarea id="c">In dieci righe, con un esempio concreto per ogni punto e tre domande che potrebbe farmi il professore.</textarea></div></div>
+<div><div class="card"><div class="lab">Il prompt completo</div><div class="out" id="o"></div><div class="row" style="margin-top:14px"><button class="p" onclick="navigator.clipboard.writeText(document.getElementById('o').innerText);this.textContent='Copiato'">Copia</button><span class="mute" id="w"></span></div></div>
+<div class="card" style="margin-top:12px"><div class="lab mute">Confronto</div><div class="mute">Vaga: <i id="vv"></i></div></div></div></div>
+<script>
+function up(){const a=document.getElementById('a').value,b=document.getElementById('b').value,c=document.getElementById('c').value;document.getElementById('o').innerHTML=`<span class="c1">${a}</span> <span class="c2">${b}</span> <span class="c3">${c}</span>`;document.getElementById('w').textContent=(a+' '+b+' '+c).split(/\s+/).filter(Boolean).length+' parole';document.getElementById('vv').textContent=document.getElementById('v').value}
+document.querySelectorAll('textarea').forEach(t=>t.addEventListener('input',up));up();
+</script></main></body></html>

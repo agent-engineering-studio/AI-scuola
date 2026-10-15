@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La macchina che indovina</title>
+<style>
+  :root { --bg:#fbf7ef; --ink:#1f2a37; --accent:#d9480f; --soft:#fff; --line:#e6ddcc; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Segoe UI", system-ui, sans-serif; background:var(--bg); color:var(--ink); font-size:22px; }
+  main { max-width: 980px; margin: 0 auto; padding: 32px 24px 48px; }
+  h1 { font-size: 36px; margin: 0 0 6px; }
+  .sub { color:#5b6672; margin:0 0 28px; font-size:19px; }
+  .frase { background:var(--soft); border:2px solid var(--line); border-radius:16px; padding:22px 26px; font-size:40px; line-height:1.3; min-height:110px; margin-bottom:28px; }
+  .frase .nuova { color:var(--accent); font-weight:700; }
+  label { display:block; font-size:18px; color:#5b6672; margin-bottom:6px; }
+  input[type=text] { width:100%; font-size:24px; padding:12px 14px; border:2px solid var(--line); border-radius:12px; background:var(--soft); }
+  .griglia { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin: 22px 0; }
+  .card { background:var(--soft); border:2px solid var(--line); border-radius:16px; padding:16px; }
+  .card input.voti { width:90px; font-size:24px; text-align:center; padding:8px; border:2px solid var(--line); border-radius:10px; }
+  .card .riga { display:flex; align-items:center; gap:10px; margin-top:10px; font-size:18px; color:#5b6672; }
+  .barra { height:12px; background:#f1e9da; border-radius:6px; margin-top:12px; overflow:hidden; }
+  .barra > div { height:100%; background:var(--accent); width:0; transition: width .3s; }
+  .azioni { display:flex; gap:14px; flex-wrap:wrap; }
+  button { font-size:24px; padding:16px 26px; border-radius:14px; border:0; cursor:pointer; font-weight:700; }
+  .primario { background:var(--accent); color:#fff; }
+  .secondario { background:#e9e1d2; color:var(--ink); }
+  .esito { margin-top:18px; font-size:20px; color:#5b6672; min-height:28px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>La macchina che indovina</h1>
+  <p class="sub">Scrivi l'inizio, proponi tre parole, dai i voti. Poi tira il dado.</p>
+
+  <div class="frase" id="frase"><span id="testo">C'era una volta un</span></div>
+
+  <label for="inizio">Inizio della frase</label>
+  <input type="text" id="inizio" value="C'era una volta un">
+
+  <div class="griglia" id="griglia"></div>
+
+  <div class="azioni">
+    <button class="primario" id="tira">🎲 Tira il dado</button>
+    <button class="secondario" id="ricomincia">Ricomincia</button>
+  </div>
+  <div class="esito" id="esito"></div>
+</main>
+<script>
+  const parole = ["re", "bambino", "drago"];
+  const votiIniziali = [6, 3, 1];
+  let frase = [];
+  const griglia = document.getElementById('griglia');
+  function render() {
+    griglia.innerHTML = '';
+    parole.forEach((p, i) => {
+      const c = document.createElement('div'); c.className = 'card';
+      c.innerHTML = `<input type="text" value="${p}" data-i="${i}" class="parola" style="width:100%;font-size:26px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;">
+        <div class="riga">Voti <input type="number" min="0" value="${votiIniziali[i]}" data-i="${i}" class="voti"> <span class="pct" data-i="${i}"></span></div>
+        <div class="barra"><div data-i="${i}"></div></div>`;
+      griglia.appendChild(c);
+    });
+    aggiornaBarre();
+  }
+  function letture() {
+    const ps = [...document.querySelectorAll('.parola')].map(e => e.value.trim());
+    const vs = [...document.querySelectorAll('.voti')].map(e => Math.max(0, parseInt(e.value) || 0));
+    return { ps, vs };
+  }
+  function aggiornaBarre() {
+    const { vs } = letture(); const tot = vs.reduce((a, b) => a + b, 0) || 1;
+    document.querySelectorAll('.barra > div').forEach((b, i) => b.style.width = (100 * vs[i] / tot) + '%');
+    document.querySelectorAll('.pct').forEach((s, i) => s.textContent = Math.round(100 * vs[i] / tot) + '%');
+  }
+  griglia.addEventListener('input', aggiornaBarre);
+  function mostra(nuova) {
+    const inizio = document.getElementById('inizio').value.trim();
+    let html = inizio + ' ' + frase.slice(0, -1).join(' ');
+    if (nuova) html += ' <span class="nuova">' + nuova + '</span>';
+    document.getElementById('testo').innerHTML = html.trim();
+  }
+  document.getElementById('tira').onclick = () => {
+    const { ps, vs } = letture(); const tot = vs.reduce((a, b) => a + b, 0);
+    if (!tot) { document.getElementById('esito').textContent = 'Dai almeno un voto a una parola.'; return; }
+    let r = Math.random() * tot, scelta = 0;
+    for (let i = 0; i < vs.length; i++) { r -= vs[i]; if (r < 0) { scelta = i; break; } }
+    frase.push(ps[scelta]); mostra(ps[scelta]);
+    document.getElementById('esito').textContent = `Il dado ha scelto "${ps[scelta]}" (aveva ${Math.round(100 * vs[scelta] / tot)}% di probabilità). Ora proponete le tre parole successive.`;
+  };
+  document.getElementById('ricomincia').onclick = () => { frase = []; mostra(null); document.getElementById('esito').textContent = ''; };
+  document.getElementById('inizio').addEventListener('input', () => mostra(null));
+  render(); frase = ['drago']; mostra('drago'); frase = ['drago'];
+  document.getElementById('esito').textContent = 'Il dado ha scelto "drago" (aveva 10% di probabilità). Ora proponete le tre parole successive.';
+</script>
+</body>
+</html>

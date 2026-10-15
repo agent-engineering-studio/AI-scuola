@@ -1,0 +1,30 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La piramide del rischio</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.pir{display:flex;flex-direction:column;align-items:center;gap:8px}.f{color:#fff;border-radius:12px;padding:12px 16px;min-height:86px;display:flex;flex-direction:column;gap:6px}.f h3{margin:0;font-size:20px}.f .c{display:flex;flex-wrap:wrap;gap:8px;min-height:40px}
+.carta{background:#fff;color:var(--ink);border-radius:10px;padding:6px 10px;font-size:17px;border:3px solid transparent;cursor:grab}.carta.ok{border-color:#51cf66}.carta.no{border-color:#ff6b6b}
+.lib{margin-top:14px}.lib .c{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}.lib .carta{background:#f1e9da}.sp{font-size:16px;color:var(--mute);margin-top:8px}
+</style></head><body><main>
+<h1>La piramide del rischio</h1><p class="sub">Trascina ogni uso dell'IA nella fascia giusta, poi premi "Rivela".</p>
+<div class="pir" id="pir">
+<div class="f" style="background:#c92a2a;width:40%" data-l="V"><h3>Vietato</h3><div class="c"></div></div>
+<div class="f" style="background:#e8590c;width:58%" data-l="A"><h3>Alto rischio</h3><div class="c"></div></div>
+<div class="f" style="background:#f59f00;width:76%" data-l="L"><h3>Rischio limitato</h3><div class="c"></div></div>
+<div class="f" style="background:#2f9e44;width:94%" data-l="M"><h3>Rischio minimo</h3><div class="c"></div></div></div>
+<div class="card lib"><b>Carte da sistemare</b><div class="c" data-l="X"></div></div>
+<div class="row" style="margin-top:14px"><button class="p" id="riv">Rivela</button><input id="nt" placeholder="Nuova carta…" style="flex:1"><select id="nl"><option value="M">minimo</option><option value="L">limitato</option><option value="A">alto</option><option value="V">vietato</option></select><button id="add">Aggiungi</button></div>
+<div class="sp" id="sp"></div>
+<script>
+let carte=[["Filtro antispam","M","Nessun effetto sulle persone: nessun obbligo particolare.","M"],["Chatbot del servizio clienti","L","Deve dire che è una macchina: obbligo di trasparenza.","A"],["Sistema che valuta le verifiche","A","Incide sul percorso di uno studente: alto rischio.","A"],["Telecamera che legge le emozioni in classe","V","Riconoscimento delle emozioni a scuola: vietato, salvo motivi medici o di sicurezza.","V"],["App che suggerisce canzoni","M","Consiglia, non decide niente di importante.","M"],["Programma che seleziona i curriculum","A","Decide sull'accesso al lavoro: alto rischio.","A"],["Videogioco con avversari IA","M","Rischio minimo.","L"],["Punteggio di affidabilità ai cittadini","V","Punteggio sociale: vietato.","V"]];
+function render(){document.querySelectorAll('.c').forEach(c=>c.innerHTML='');carte.forEach((k,i)=>{const d=document.createElement('div');d.className='carta';d.textContent=k[0];d.draggable=true;d.dataset.i=i;d.ondragstart=e=>e.dataTransfer.setData('i',i);document.querySelector(`[data-l="${k[3]}"] .c`).appendChild(d)})}
+document.querySelectorAll('[data-l]').forEach(z=>{z.ondragover=e=>e.preventDefault();z.ondrop=e=>{e.preventDefault();carte[e.dataTransfer.getData('i')][3]=z.dataset.l;document.getElementById('sp').textContent='';render()}});
+document.getElementById('riv').onclick=()=>{let ok=0;document.querySelectorAll('.carta').forEach(d=>{const k=carte[d.dataset.i];const g=k[1]==k[3];d.classList.add(g?'ok':'no');if(g)ok++});document.getElementById('sp').innerHTML=`${ok} carte su ${carte.length} al posto giusto. `+carte.filter(k=>k[1]!=k[3]).map(k=>`<b>${k[0]}</b>: ${k[2]}`).join(' ')};
+document.getElementById('add').onclick=()=>{const t=document.getElementById('nt').value.trim();if(!t)return;carte.push([t,document.getElementById('nl').value,'Spiegazione scritta dal docente.','X']);document.getElementById('nt').value='';render()};render();
+</script></main></body></html>

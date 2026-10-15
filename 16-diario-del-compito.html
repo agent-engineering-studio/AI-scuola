@@ -1,0 +1,36 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Diario del compito</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+textarea{width:100%;min-height:260px;font-size:21px;line-height:1.5}.ver{padding:10px 12px;border-radius:10px;background:#f1e9da;margin-bottom:8px;font-size:18px;cursor:pointer}.ver b{display:block}.ver.sel{outline:3px solid var(--acc)}
+.q{margin-bottom:10px}.q label{display:block;font-size:18px;color:var(--mute);margin-bottom:4px}.q input{width:100%}
+#stampa{display:none;background:#fff;padding:30px;font-size:19px;line-height:1.5}#stampa h2{margin-top:24px}
+</style></head><body><main>
+<h1>Diario del compito</h1><p class="sub">Scrivi, salva le versioni, dichiara come hai usato l'IA. Il processo resta in vista.</p>
+<div id="app"><div class="grid2" style="grid-template-columns:1.6fr 1fr">
+<div><div class="card"><textarea id="t">L'amicizia ai tempi dei social
+
+Quando ero piccolo pensavo che un amico fosse chi ti presta la bici. Adesso ho 150 "amici" su un'app e con la maggior parte non ho mai parlato. Secondo me il problema non sono i social, è che abbiamo iniziato a usare la stessa parola per due cose diverse.
+
+Un amico vero si accorge se stai male anche se non scrivi niente. Un'app no: l'app si accorge solo di quello che clicchi.</textarea><div class="row" style="margin-top:12px"><button class="p" id="salva">Salva versione</button><button id="consegna">Consegna</button><span class="mute" id="w"></span></div></div>
+<div class="card" style="margin-top:12px"><b>Dichiarazione d'uso dell'IA</b>
+<div class="q" style="margin-top:10px"><label>1. Ho usato l'IA per questo compito?</label><input class="d" value="Sì"></div>
+<div class="q"><label>2. Per quali parti?</label><input class="d" value="Per farmi tre domande sulla traccia (con mio padre che scriveva)"></div>
+<div class="q"><label>3. Quali richieste ho fatto?</label><input class="d" value="«Non scrivere il tema, fammi tre domande per capire cosa penso»"></div>
+<div class="q"><label>4. Cosa del lavoro finale è solo mio?</label><input class="d" value="Tutte le idee e tutte le frasi. L'IA non ha scritto niente."></div></div></div>
+<div><div class="card"><b>Versioni salvate</b><div style="margin-top:10px" id="vers"></div></div></div></div></div>
+<div id="stampa"></div>
+<script>
+const T=document.getElementById('t'),V=document.getElementById('vers');let vers=[];function ora(){return new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}
+function wc(s){return s.split(/\s+/).filter(Boolean).length}function upd(){document.getElementById('w').textContent=wc(T.value)+' parole'}T.addEventListener('input',upd);upd();
+function render(){V.innerHTML=vers.map((v,i)=>`<div class="ver" data-i="${i}"><b>${v.ora} · versione ${i+1}</b>${wc(v.testo)} parole</div>`).reverse().join('')||'<span class="mute">Nessuna versione ancora.</span>';V.querySelectorAll('.ver').forEach(e=>e.onclick=()=>{T.value=vers[e.dataset.i].testo;upd();V.querySelectorAll('.ver').forEach(x=>x.classList.remove('sel'));e.classList.add('sel')})}
+document.getElementById('salva').onclick=()=>{vers.push({ora:ora(),testo:T.value});render()};
+document.getElementById('consegna').onclick=()=>{const d=[...document.querySelectorAll('.d')].map(x=>x.value);const s=document.getElementById('stampa');s.style.display='block';document.getElementById('app').style.display='none';s.innerHTML=`<h1>Compito consegnato</h1><pre style="white-space:pre-wrap;font-family:inherit">${T.value}</pre><h2>Versioni</h2>${vers.map((v,i)=>`${v.ora} · versione ${i+1} · ${wc(v.testo)} parole`).join('<br>')||'nessuna'}<h2>Dichiarazione d'uso dell'IA</h2><ol>${d.map(x=>`<li>${x}</li>`).join('')}</ol><button onclick="location.reload()">Torna indietro</button>`};
+vers=[{ora:'15:31',testo:'L\'amicizia ai tempi dei social\n\n- amici veri vs amici online\n- la stessa parola per due cose\n- chi si accorge se stai male'},{ora:'15:55',testo:T.value.slice(0,180)},{ora:'16:20',testo:T.value.slice(0,300)},{ora:'16:42',testo:T.value}];render();
+</script></main></body></html>

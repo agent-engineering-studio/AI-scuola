@@ -1,0 +1,27 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La chat smemorata</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.chat{height:380px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:16px}.msg{max-width:70%;padding:12px 16px;border-radius:16px;font-size:21px}.io{align-self:flex-end;background:#dbe4ff}.m{align-self:flex-start;background:#f1e9da}
+.sw{display:flex;align-items:center;gap:10px;font-size:19px}.sw span.t{width:64px;height:34px;border-radius:17px;background:#ccc;position:relative}.sw span.t i{position:absolute;top:3px;left:3px;width:28px;height:28px;border-radius:50%;background:#fff}.sw.on span.t{background:var(--verde)}.sw.on span.t i{left:33px}
+</style></head><body><main>
+<h1>La chat smemorata</h1><p class="sub">Una macchina gentile che risponde con frasi scritte dalla classe. La memoria è un interruttore.</p>
+<div class="row" style="justify-content:space-between;margin-bottom:12px"><div class="sw" id="sw"><span class="t"><i></i></span> Memoria: <b id="stato">spenta</b></div><button id="reset">Nuova chat</button></div>
+<div class="card chat" id="chat"></div>
+<div class="row" style="margin-top:12px"><input id="in" style="flex:1" placeholder="Scrivi un messaggio…"><button class="p" id="invia">Invia</button></div>
+<p class="mute">Frasi della classe: "Che bello!", "Dimmi di più", "Capisco", "Interessante!", "Raccontami ancora".</p>
+<script>
+const frasi=["Che bello!","Dimmi di più","Capisco","Interessante!","Raccontami ancora"];let mem=false,nome=null;
+const chat=document.getElementById('chat');function add(t,c){const d=document.createElement('div');d.className='msg '+c;d.textContent=t;chat.appendChild(d);chat.scrollTop=1e9}
+function rispondi(t){const m=t.match(/mi chiamo\s+(\w+)/i);if(m&&mem){nome=m[1];return "Piacere, "+nome+"!"}if(/come mi chiamo/i.test(t)){return (mem&&nome)?"Ti chiami "+nome+".":"Non lo so. Ogni messaggio per me è il primo."}return frasi[Math.floor(Math.random()*frasi.length)]}
+document.getElementById('invia').onclick=()=>{const t=document.getElementById('in').value.trim();if(!t)return;add(t,'io');setTimeout(()=>add(rispondi(t),'m'),300);document.getElementById('in').value=''};
+document.getElementById('sw').onclick=()=>{mem=!mem;nome=null;document.getElementById('sw').classList.toggle('on',mem);document.getElementById('stato').textContent=mem?'accesa':'spenta'};
+document.getElementById('reset').onclick=()=>{chat.innerHTML='';nome=null};
+add("Ciao, mi chiamo Luca",'io');add("Interessante!",'m');add("Come mi chiamo?",'io');add("Non lo so. Ogni messaggio per me è il primo.",'m');add("Sei mio amico?",'io');add("Che bello!",'m');
+</script></main></body></html>

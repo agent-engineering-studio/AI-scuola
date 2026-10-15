@@ -1,0 +1,25 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vero o inventato</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.carta{min-height:200px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:32px;line-height:1.35;padding:30px}
+.esito{margin-top:14px;font-size:20px;padding:14px 18px;border-radius:12px}.ok{background:#d3f9d8}.no{background:#ffe3e3}
+</style></head><body><main>
+<h1>Vero o inventato?</h1><p class="sub">Frasi sul nostro paese: alcune vere, alcune prese dagli errori di Claude. Stesso tono, stesso stile.</p>
+<div class="mute" id="prog">Carta 3 di 8 · Punteggio 2</div>
+<div class="card carta" id="c"></div>
+<div class="row" style="margin-top:14px"><button class="p" id="v" style="background:var(--verde)">Vero</button><button class="p" id="f" style="background:var(--rosso)">Inventato</button><button id="r">Rigioca</button></div>
+<div id="e"></div>
+<script>
+const carte=[["La festa patronale si celebra la seconda domenica di agosto.",true,"Lo sappiamo tutti: è il programma della festa."],["Il castello fu costruito nel 1247 dagli Svevi.",false,"Claude l'ha scritto con sicurezza, ma il castello è del Cinquecento."],["Nel 1951 il paese aveva circa 6.000 abitanti.",true,"Confermato dal censimento ISTAT."],["Il nome del paese deriva da un'antica parola greca che significa 'collina'.",false,"Suona bene, ma nessuna fonte lo dice: è un'invenzione."],["La chiesa madre è dedicata a San Nicola.",true,"Basta leggere la targa sulla facciata."],["Nel paese nacque il pittore Antonio Rossi nel 1802.",false,"Il pittore non esiste: nome plausibile, fatto inventato."],["La piazza principale si chiama Piazza Garibaldi.",true,"C'è il cartello."],["Il libro 'Storia di [paese]' di Mario Bianchi fu pubblicato nel 1978.",false,"Nessun catalogo di biblioteca lo trova: è una fonte inventata."]];
+let i=2,p=2;function show(){document.getElementById('c').textContent=carte[i][0];document.getElementById('prog').textContent=`Carta ${i+1} di ${carte.length} · Punteggio ${p}`;document.getElementById('e').innerHTML=''}
+function ans(v){const [t,vera,sp]=carte[i];const ok=v===vera;if(ok)p++;document.getElementById('e').innerHTML=`<div class="esito ${ok?'ok':'no'}"><b>${ok?'Giusto':'Non era così'}.</b> Questa frase è <b>${vera?'vera':'inventata'}</b>. ${sp}</div>`;document.getElementById('prog').textContent=`Carta ${i+1} di ${carte.length} · Punteggio ${p}`;setTimeout(()=>{i=(i+1)%carte.length;show()},2500)}
+document.getElementById('v').onclick=()=>ans(true);document.getElementById('f').onclick=()=>ans(false);document.getElementById('r').onclick=()=>{i=0;p=0;show()};show();
+document.getElementById('e').innerHTML=`<div class="esito no"><b>Non era così.</b> Questa frase è <b>inventata</b>. Claude l'ha scritto con sicurezza, ma il castello è del Cinquecento.</div>`;
+</script></main></body></html>

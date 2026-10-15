@@ -1,0 +1,26 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Il consigliere</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.vid{border-radius:14px;padding:18px;color:#fff;cursor:pointer;min-height:120px;display:flex;flex-direction:column;justify-content:space-between;font-weight:700;font-size:21px}
+.calcio{background:#2f9e44}.cucina{background:#e8590c}.scienza{background:#1971c2}.musica{background:#9c36b5}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+</style></head><body><main>
+<h1>Il consigliere</h1><p class="sub">Un'app di video che impara da ogni click. Guarda la bolla chiudersi.</p>
+<div class="card"><div class="row" style="justify-content:space-between"><b>Quanto è chiusa la tua bolla</b><b id="pct">0</b></div><div class="bar" style="margin-top:10px"><div id="bolla" style="width:0%"></div></div></div>
+<div class="grid4" id="g"></div>
+<div class="row"><button id="reset">Ricomincia</button><span class="mute" id="log">Click fatti: 0</span></div>
+<script>
+const V={calcio:["Gol più belli del mese","Rigori impossibili","Allenamento dei portieri"],cucina:["Pizza in 10 minuti","Tiramisù facile","Pasta e ceci della nonna"],scienza:["Perché il cielo è blu","Vulcani in bottiglia","Come volano gli aerei"],musica:["Impara 3 accordi","Il basso spiegato","Cantare senza stonare"]};
+let w={calcio:1,cucina:1,scienza:1,musica:1},n=0,hist=[];
+function pick(){const cats=Object.keys(w),tot=cats.reduce((a,c)=>a+w[c],0);const out=[];for(let i=0;i<4;i++){let r=Math.random()*tot,c=cats[0];for(const k of cats){r-=w[k];if(r<0){c=k;break}}out.push(c)}return out}
+function render(){const g=document.getElementById('g');g.innerHTML='';pick().forEach(c=>{const d=document.createElement('div');d.className='vid '+c;d.innerHTML=`<span>${V[c][Math.floor(Math.random()*3)]}</span><span style="font-size:15px;opacity:.85">${c}</span>`;d.onclick=()=>{w[c]+=2;n++;hist.push(c);update();render()};g.appendChild(d)});update()}
+function update(){const tot=Object.values(w).reduce((a,b)=>a+b,0),mx=Math.max(...Object.values(w));const p=Math.round(100*(mx/tot-0.25)/0.75);document.getElementById('bolla').style.width=Math.max(0,p)+'%';document.getElementById('pct').textContent=Math.max(0,p)+' / 100';document.getElementById('log').textContent='Click fatti: '+n+(n?' · ultimi: '+hist.slice(-5).join(', '):'')}
+document.getElementById('reset').onclick=()=>{w={calcio:1,cucina:1,scienza:1,musica:1};n=0;hist=[];render()};
+w={calcio:11,cucina:1,scienza:1,musica:1};n=5;hist=['calcio','calcio','calcio','calcio','calcio'];render();
+</script></main></body></html>

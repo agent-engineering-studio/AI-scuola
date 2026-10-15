@@ -1,0 +1,27 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dizionario del libro</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.sch{padding:30px 34px;min-height:300px}.sch .w{font-size:44px;font-weight:800;display:flex;justify-content:space-between;align-items:center}.sch .w span.s{cursor:pointer;font-size:40px;color:#ccc}.sch .w span.s.on{color:#f59f00}
+.sch .d{font-size:28px;line-height:1.5;margin:16px 0}.sch .e{font-size:22px;color:var(--mute);line-height:1.5}.sch .e b{color:var(--ink)}
+.nav{display:flex;gap:12px;margin-top:14px}.nav button{flex:1;font-size:24px}.lista{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.lista span{padding:6px 12px;border-radius:999px;background:#f1e9da;font-size:17px;cursor:pointer}.lista span.on{background:#ffe066}
+</style></head><body><main>
+<h1 style="font-size:26px">Dizionario del capitolo 7 — Le Crociate</h1>
+<input id="cerca" placeholder="Cerca una parola…" style="width:100%;margin-bottom:14px">
+<div class="card sch" id="s"></div>
+<div class="nav"><button id="prev">◀</button><button class="p" id="leggi">🔊 Leggimi</button><button id="next">▶</button></div>
+<div class="lista" id="l"></div>
+<script>
+let P=[["crociata","Un viaggio armato di cristiani verso Gerusalemme, nel Medioevo.","Nel 1096 partì la prima crociata.","Immagina una lunga fila di cavalieri e contadini con una croce rossa cucita sul mantello.",true],["concilio","Una grande riunione di vescovi e del papa per decidere cose importanti della Chiesa.","Il papa convocò un concilio a Clermont.","Come un'assemblea di tutta la scuola, ma con solo persone di Chiesa.",false],["indulgenza","Il perdono dei peccati promesso dalla Chiesa.","A chi partiva fu promessa l'indulgenza.","Come se un debito venisse cancellato del tutto.",true],["pellegrino","Una persona che fa un lungo viaggio per arrivare in un luogo sacro.","Molti pellegrini andavano a Gerusalemme già prima delle crociate.","Un viandante con un bastone, un mantello e una conchiglia.",false],["assedio","Quando un esercito circonda una città per costringerla ad arrendersi.","L'assedio di Gerusalemme durò più di un mese.","Una città chiusa dentro le mura, con l'esercito tutto intorno che aspetta.",true],["saraceni","Il nome che i cristiani del Medioevo davano ai musulmani.","I cronisti chiamavano saraceni i difensori della città.","È una parola di allora: oggi diciamo musulmani.",false]];
+let i=0;function ord(){return P.map((p,k)=>k).sort((a,b)=>(P[b][4]-P[a][4]))}
+function show(){const p=P[i];document.getElementById('s').innerHTML=`<div class="w"><span>${p[0]}</span><span class="s ${p[4]?'on':''}" id="star">★</span></div><div class="d">${p[1]}</div><div class="e"><b>Esempio:</b> ${p[2]}<br><b>Immaginala così:</b> ${p[3]}</div>`;document.getElementById('star').onclick=()=>{P[i][4]=!P[i][4];show()};document.getElementById('l').innerHTML=ord().map(k=>`<span class="${k==i?'on':''}" data-k="${k}">${P[k][4]?'★ ':''}${P[k][0]}</span>`).join('');document.querySelectorAll('.lista span').forEach(s=>s.onclick=()=>{i=+s.dataset.k;show()})}
+document.getElementById('next').onclick=()=>{i=(i+1)%P.length;show()};document.getElementById('prev').onclick=()=>{i=(i-1+P.length)%P.length;show()};
+document.getElementById('cerca').addEventListener('input',e=>{const k=P.findIndex(p=>p[0].startsWith(e.target.value.toLowerCase()));if(k>=0){i=k;show()}});
+document.getElementById('leggi').onclick=()=>{if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(P[i][0]+'. '+P[i][1]+' '+P[i][2]);u.lang='it-IT';u.rate=.9;speechSynthesis.speak(u)};show();
+</script></main></body></html>

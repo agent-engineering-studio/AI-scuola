@@ -1,0 +1,27 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pianificatore dei passi</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.dots{display:flex;gap:10px;justify-content:center;margin-bottom:18px}.dots i{width:22px;height:22px;border-radius:50%;background:#e6ddcc;display:block}.dots i.on{background:var(--verde)}.dots i.cur{background:var(--acc)}
+.passo{text-align:center;padding:40px 30px}.passo .n{color:var(--mute);font-size:18px}.passo .t{font-size:38px;line-height:1.3;margin:12px 0 20px;font-weight:700}.passo .tm{font-size:64px;font-weight:800;color:var(--blu);font-variant-numeric:tabular-nums}
+.ctrl{display:flex;gap:14px;margin-top:16px}.ctrl button{flex:1;font-size:26px;padding:20px}
+</style></head><body><main>
+<h1 style="font-size:26px">Il mio compito: riassunto del capitolo 7</h1>
+<div class="dots" id="dots"></div>
+<div class="card passo" id="p"></div>
+<div class="ctrl"><button id="pausa">Pausa</button><button class="p" id="fatto" style="background:var(--verde)">✔ Fatto</button></div>
+<script>
+const passi=[["Leggi il primo paragrafo, solo quello",5],["Sottolinea la frase più importante",3],["Scrivila con parole tue sul quaderno",5],["Leggi il secondo paragrafo",5],["Sottolinea e riscrivi anche questa",6],["Metti insieme le due frasi: è il riassunto",6]];
+let i=2,sec=passi[2][1]*60,run=true,t0;function dots(){document.getElementById('dots').innerHTML=passi.map((p,k)=>`<i class="${k<i?'on':k==i?'cur':''}"></i>`).join('')}
+function show(){if(i>=passi.length){const tot=passi.reduce((a,p)=>a+p[1],0);document.getElementById('p').innerHTML=`<div class="t">Il compito è finito.</div><div class="n">${passi.length} passi · circa ${tot} minuti</div>`;document.querySelector('.ctrl').style.display='none';dots();return}document.getElementById('p').innerHTML=`<div class="n">Passo ${i+1} di ${passi.length}</div><div class="t">${passi[i][0]}</div><div class="tm" id="tm"></div><div class="n">minuti previsti: ${passi[i][1]}</div>`;dots();tick()}
+function tick(){const m=Math.floor(Math.max(0,sec)/60),s=Math.max(0,sec)%60;const e=document.getElementById('tm');if(e)e.textContent=`${m}:${String(s).padStart(2,'0')}`}
+setInterval(()=>{if(run&&sec>0){sec--;tick()}},1000);
+document.getElementById('fatto').onclick=()=>{i++;if(i<passi.length)sec=passi[i][1]*60;show()};document.getElementById('pausa').onclick=e=>{run=!run;e.target.textContent=run?'Pausa':'Riprendi'};
+sec=3*60+42;show();
+</script></main></body></html>

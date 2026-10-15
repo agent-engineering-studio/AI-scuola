@@ -1,0 +1,25 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Carta di verifica</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.fonte{display:grid;grid-template-columns:120px 1fr 1fr 1.4fr 120px;gap:10px;align-items:center;margin-bottom:10px}.fonte input{width:100%}.h{font-size:16px;color:var(--mute);font-weight:700}
+.verd button{opacity:.35}.verd.ok button{opacity:1}
+</style></head><body><main>
+<h1>Carta di verifica</h1><p class="sub">Chi l'ha scritto, quando, cosa dice, ci sono prove. Tre fonti, poi il verdetto.</p>
+<div class="card"><label class="mute">Affermazione da verificare</label><input style="width:100%;font-size:24px" value="Il pesce rosso ha una memoria di soli tre secondi"></div>
+<div class="card" style="margin-top:14px" id="f">
+<div class="fonte h"><span></span><span>Chi l'ha scritto</span><span>Quando</span><span>Cosa dice</span><span>Prove?</span></div>
+</div>
+<div class="card verd" id="verd" style="margin-top:14px"><div class="row" style="justify-content:space-between"><b>Il verdetto</b><span class="mute" id="st"></span></div><div class="row" style="margin-top:10px"><button class="vb" style="background:var(--verde);color:#fff">Vero</button><button class="vb" style="background:var(--rosso);color:#fff">Falso</button><button class="vb" style="background:var(--giallo);color:#fff">Dubbio</button><button onclick="window.print()">Stampa</button></div><div id="res" style="margin-top:10px;font-size:22px"></div><div></div></div>
+<script>
+const dati=[["Museo di storia naturale","2022","I pesci rossi ricordano per mesi: hanno imparato a reagire a un suono","sì"],["Università (studio pubblicato)","2003","Addestrati a riconoscere un segnale, lo ricordano dopo settimane","sì"],["","","",""]];
+const f=document.getElementById('f');dati.forEach((d,i)=>{const r=document.createElement('div');r.className='fonte';r.innerHTML=`<b>Fonte ${i+1}</b>`+d.map(v=>`<input value="${v}">`).join('');f.appendChild(r)});
+function chk(){const ins=[...f.querySelectorAll('input')];let ok=true;for(let i=0;i<3;i++){if(!ins[i*4].value.trim()||!ins[i*4+1].value.trim())ok=false}document.getElementById('verd').classList.toggle('ok',ok);document.getElementById('st').textContent=ok?'Tre fonti compilate: puoi decidere.':'Compila chi e quando per tutte e tre le fonti.'}
+f.addEventListener('input',chk);chk();document.querySelectorAll('.vb').forEach(b=>b.onclick=()=>{if(!document.getElementById('verd').classList.contains('ok'))return;document.getElementById('res').innerHTML='Verdetto: <b>'+b.textContent+'</b> · '+new Date().toLocaleDateString('it-IT')});
+</script></main></body></html>

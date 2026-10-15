@@ -1,0 +1,23 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Le domande una alla volta</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.q{padding:30px 34px}.q .d{font-size:34px;line-height:1.4;font-weight:700}.q textarea{width:100%;min-height:90px;font-size:22px;margin-top:18px}
+.aiuti{margin-top:14px;display:flex;flex-direction:column;gap:10px}.aiuto{padding:14px 18px;border-radius:12px;font-size:22px;line-height:1.5}.a1{background:#fff3bf}.a2{background:#ffe8cc}.a3{background:#d3f9d8}
+.ctrl{display:flex;gap:12px;margin-top:14px}.ctrl button{flex:1;font-size:24px}.rie{font-size:20px;line-height:1.7}
+</style></head><body><main>
+<h1 style="font-size:26px">Le domande una alla volta</h1>
+<div class="mute" id="st" style="margin-bottom:10px"></div>
+<div class="card q" id="q"></div>
+<div class="ctrl" id="ctrl"><button id="voce">Ho risposto a voce</button><button class="p" id="aiuto" style="background:var(--giallo)">Un aiuto</button><button id="next">Avanti ▶</button></div>
+<script>
+const D=[["Perché il papa chiese ai cristiani di partire?","Rileggi la seconda frase del primo blocco: cosa voleva il papa per Gerusalemme?","Chi governava Gerusalemme in quel momento, e il papa voleva che restasse così?","Voleva liberare Gerusalemme dai musulmani che la governavano. Per questo chiese ai cavalieri di partire."],["Chi partì per la crociata? Solo i cavalieri?","Cerca nel testo la parola 'anche'.","Il testo nomina due gruppi di persone oltre ai cavalieri: quali?","Non solo i cavalieri: partirono anche contadini e poveri."],["Perché quel viaggio si chiama 'crociata'?","C'entra qualcosa che i partecipanti portavano cucito sui vestiti.","Che forma aveva il segno cucito sui vestiti?","Perché i partecipanti cucivano una croce sui vestiti: da 'croce' viene 'crociata'."],["Quanto durò il viaggio e come finì?","Ci sono due date nel testo: trovale.","Dal 1096 al 1099: quanti anni sono? E cosa successe nel 1099?","Durò tre anni. Nel 1099 i crociati conquistarono Gerusalemme."]];
+let i=1,a=[0,1,0,0],liv=1;function show(){if(i>=D.length){document.getElementById('q').innerHTML='<div class="d">Fine delle domande.</div><div class="rie" style="margin-top:12px">'+D.map((d,k)=>`${k+1}. ${['senza aiuto','con un aiuto','con due aiuti','con la risposta'][a[k]]}`).join('<br>')+'</div>';document.getElementById('ctrl').style.display='none';return}const d=D[i];let h=`<div class="d">${d[0]}</div><textarea placeholder="Scrivi qui la risposta, oppure dilla a voce"></textarea><div class="aiuti">`;if(liv>=1)h+=`<div class="aiuto a1"><b>Aiuto 1.</b> ${d[1]}</div>`;if(liv>=2)h+=`<div class="aiuto a2"><b>Aiuto 2.</b> ${d[2]}</div>`;if(liv>=3)h+=`<div class="aiuto a3"><b>La risposta.</b> ${d[3]}</div>`;document.getElementById('q').innerHTML=h+'</div>';document.getElementById('st').textContent=`Domanda ${i+1} di ${D.length}`;document.getElementById('aiuto').textContent=liv>=3?'Non ci sono altri aiuti':liv==2?'La risposta':'Un aiuto'}
+document.getElementById('aiuto').onclick=()=>{if(liv<3){liv++;a[i]=liv;show()}};document.getElementById('next').onclick=()=>{i++;liv=0;if(i<D.length)a[i]=0;show()};document.getElementById('voce').onclick=()=>{i++;liv=0;show()};show();
+</script></main></body></html>

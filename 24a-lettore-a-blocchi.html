@@ -1,0 +1,30 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lettore a blocchi</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+body{background:#fdf6e3}.blocco{font-size:34px;line-height:1.9;letter-spacing:.06em;word-spacing:.2em;padding:34px 38px;min-height:260px}.blocco mark{background:#ffe066;border-radius:4px}
+.ctrl{display:flex;gap:14px;margin-top:16px}.ctrl button{flex:1;font-size:26px;padding:18px}.pan{display:none;margin-top:14px}.pan.on{display:block}.pan label{display:flex;align-items:center;gap:10px;font-size:18px;margin:8px 0}.pan input[type=range]{flex:1}
+</style></head><body><main>
+<h1 style="font-size:26px">Lettore a blocchi</h1>
+<div class="bar" style="margin-bottom:14px"><div id="prog" style="width:20%"></div></div>
+<div class="card blocco" id="b"></div>
+<div class="ctrl"><button id="prev">◀ Indietro</button><button class="p" id="leggi">🔊 Leggimi</button><button id="next">Avanti ▶</button></div>
+<div class="row" style="margin-top:12px;justify-content:space-between"><span class="mute" id="st"></span><button id="imp" style="font-size:16px;padding:8px 14px">Impostazioni</button></div>
+<div class="card pan" id="pan"><label>Carattere <input type="range" id="fs" min="22" max="48" value="34"></label><label>Interlinea <input type="range" id="lh" min="14" max="26" value="19"></label><label>Spaziatura lettere <input type="range" id="ls" min="0" max="15" value="6"></label><label>Sfondo <select id="bg"><option value="#fdf6e3">crema</option><option value="#ffffff">bianco</option><option value="#e7f5ff">azzurro chiaro</option></select></label><label>Frasi per blocco <input type="range" id="nf" min="1" max="5" value="2"></label><label>Testo <textarea id="txt" style="width:100%;min-height:80px;font-size:16px"></textarea></label></div>
+<script>
+const testo=`Nel 1095 il papa Urbano II chiese ai cavalieri cristiani di partire per Gerusalemme. Voleva liberare la città dai musulmani, che la governavano da molti anni. Migliaia di persone risposero all'appello. Erano cavalieri, ma anche contadini e poveri. Questo viaggio armato fu chiamato "crociata", perché i partecipanti cucivano una croce sui vestiti. Il viaggio durò tre anni. Nel 1099 i crociati conquistarono Gerusalemme.`;
+let blocchi=[],i=0;const B=document.getElementById('b');document.getElementById('txt').value=testo;
+function split(){const nf=+document.getElementById('nf').value;const fr=document.getElementById('txt').value.match(/[^.!?]+[.!?]+["']?/g)||[document.getElementById('txt').value];blocchi=[];for(let k=0;k<fr.length;k+=nf)blocchi.push(fr.slice(k,k+nf).map(s=>s.trim()));i=Math.min(i,blocchi.length-1);show()}
+function show(hl=-1){B.innerHTML=blocchi[i].map((s,k)=>k==hl?`<mark>${s}</mark>`:s).join(' ');document.getElementById('prog').style.width=(100*(i+1)/blocchi.length)+'%';document.getElementById('st').textContent=`Blocco ${i+1} di ${blocchi.length}`}
+document.getElementById('next').onclick=()=>{if(i<blocchi.length-1){i++;show()}};document.getElementById('prev').onclick=()=>{if(i>0){i--;show()}};
+document.getElementById('leggi').onclick=()=>{if(!('speechSynthesis' in window)){alert('La lettura ad alta voce non è disponibile in questo browser.');return}speechSynthesis.cancel();blocchi[i].forEach((s,k)=>{const u=new SpeechSynthesisUtterance(s);u.lang='it-IT';u.rate=.9;const v=speechSynthesis.getVoices().find(x=>x.lang.startsWith('it'));if(v)u.voice=v;u.onstart=()=>show(k);u.onend=()=>{if(k==blocchi[i].length-1)show()};speechSynthesis.speak(u)})};
+document.getElementById('imp').onclick=()=>document.getElementById('pan').classList.toggle('on');
+const ap=()=>{B.style.fontSize=document.getElementById('fs').value+'px';B.style.lineHeight=document.getElementById('lh').value/10;B.style.letterSpacing=document.getElementById('ls').value/100+'em';document.body.style.background=document.getElementById('bg').value};
+['fs','lh','ls','bg'].forEach(id=>document.getElementById(id).addEventListener('input',ap));['nf','txt'].forEach(id=>document.getElementById(id).addEventListener('input',split));split();show(0);
+</script></main></body></html>

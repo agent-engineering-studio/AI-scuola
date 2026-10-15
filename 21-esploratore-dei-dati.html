@@ -1,0 +1,34 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Esploratore dei dati</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+table{width:100%;border-collapse:collapse;font-size:17px}th{cursor:pointer;background:#f1e9da}td,th{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left}td.r{color:var(--mute);width:40px}td.v{color:var(--rosso);font-style:italic}
+.cnt{background:#d3f9d8;padding:10px 14px;border-radius:10px;font-size:19px}textarea{width:100%;min-height:70px;font-size:15px;font-family:monospace}
+</style></head><body><main>
+<h1>Esploratore dei dati</h1><p class="sub">Incolla il file CSV del Ministero. Ordina, filtra, conta. Ogni riga ha il suo numero.</p>
+<details class="card" style="margin-bottom:12px"><summary class="mute">Il file CSV (incolla qui)</summary><textarea id="csv">DENOMINAZIONE;ANNO_COSTRUZIONE;PALESTRA;LAB_INFORMATICA;MENSA
+Scuola primaria "G. Pascoli";1962;SI;NO;SI
+Scuola primaria "D. Alighieri";1974;NO;;SI
+Sc. secondaria I grado "A. Moro";1981;SI;SI;NO
+Plesso via Roma;;;;NO
+Liceo scientifico "E. Fermi";1995;SI;SI;NO
+Ist. tecnico "L. da Vinci";1988;SI;SI;NO
+Scuola dell'infanzia "Arcobaleno";2004;NO;NO;SI
+Scuola dell'infanzia "Girasole";1970;NO;;SI
+Scuola primaria "G. Rodari";1958;NO;NO;SI
+Plesso contrada Serra;1965;NO;;NO
+Ist. professionale "Marconi";1979;;SI;NO</textarea></details>
+<div class="row" style="margin-bottom:12px"><input id="filtro" placeholder="Filtra…" style="flex:1"><select id="col"></select><span class="cnt" id="cnt"></span></div>
+<div class="card" style="padding:0;overflow:hidden"><table id="tb"></table></div>
+<p class="mute" style="margin-top:10px">Dati di esempio. Claude aveva scritto "7 scuole su 11 non hanno la palestra": contate voi.</p>
+<script>
+let H=[],R=[],sortK=-1,asc=true;function parse(){const l=document.getElementById('csv').value.trim().split(/\r?\n/);const sep=l[0].includes(';')?';':',';H=l[0].split(sep);R=l.slice(1).map((x,i)=>({n:i+1,c:x.split(sep)}));document.getElementById('col').innerHTML=H.map((h,i)=>`<option value="${i}">${h}</option>`).join('');document.getElementById('col').value=2;render()}
+function render(){const f=document.getElementById('filtro').value.toLowerCase(),k=+document.getElementById('col').value;let rows=R.filter(r=>!f||r.c.join(' ').toLowerCase().includes(f));if(sortK>=0)rows=rows.slice().sort((a,b)=>(a.c[sortK]||'').localeCompare(b.c[sortK]||'',undefined,{numeric:true})*(asc?1:-1));document.getElementById('tb').innerHTML='<tr><th>#</th>'+H.map((h,i)=>`<th data-i="${i}">${h}${sortK==i?(asc?' ▲':' ▼'):''}</th>`).join('')+'</tr>'+rows.map(r=>`<tr><td class="r">${r.n}</td>${r.c.map(v=>v===''?'<td class="v">(vuoto)</td>':`<td>${v}</td>`).join('')}</tr>`).join('');const si=rows.filter(r=>r.c[k]=='SI').length,no=rows.filter(r=>r.c[k]=='NO').length,vu=rows.filter(r=>!r.c[k]).length;document.getElementById('cnt').innerHTML=`Righe visibili: <b>${rows.length}</b> · ${H[k]} = SI: <b>${si}</b> · NO: <b>${no}</b> · vuote: <b>${vu}</b>`;document.querySelectorAll('th[data-i]').forEach(t=>t.onclick=()=>{const i=+t.dataset.i;asc=sortK==i?!asc:true;sortK=i;render()})}
+document.getElementById('csv').addEventListener('input',parse);document.getElementById('filtro').addEventListener('input',render);document.getElementById('col').addEventListener('change',render);parse();
+</script></main></body></html>

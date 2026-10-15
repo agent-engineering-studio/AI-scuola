@@ -1,0 +1,21 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Il contatore dei mestieri</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.m{margin-bottom:14px}.m .lab{display:flex;justify-content:space-between;font-size:19px;margin-bottom:6px}.stack{display:flex;height:22px;border-radius:11px;overflow:hidden}.stack .M{background:#1971c2}.stack .F{background:#e64980}
+.leg{font-size:16px;color:var(--mute)}
+</style></head><body><main>
+<h1>Il contatore dei mestieri</h1><p class="sub">I nomi venuti in mente a noi e quelli scelti da Claude, mestiere per mestiere. <span class="leg">■ blu: nomi maschili · ■ rosa: nomi femminili</span></p>
+<div class="grid2"><div class="card"><h2 style="margin:0 0 12px;font-size:24px">Noi (23 fogli)</h2><div id="noi"></div></div><div class="card"><h2 style="margin:0 0 12px;font-size:24px">Claude (3 storie)</h2><div id="cl"></div></div></div>
+<div class="row" style="margin-top:14px"><input placeholder="Aggiungi un nome…" style="flex:1"><select><option>pilota</option><option>maestro d'asilo</option><option>meccanico</option><option>parrucchiere</option><option>chirurgo</option></select><button class="p">Aggiungi</button></div>
+<script>
+const noi={pilota:[21,2],"maestro d'asilo":[3,20],meccanico:[22,1],parrucchiere:[5,18],chirurgo:[17,6]};const cl={pilota:[2,1],"maestro d'asilo":[1,2],meccanico:[3,0],parrucchiere:[1,2],chirurgo:[2,1]};
+function draw(id,d){const el=document.getElementById(id);el.innerHTML='';for(const k in d){const [m,f]=d[k],t=m+f||1;el.innerHTML+=`<div class="m"><div class="lab"><b>${k}</b><span class="mute">${m} M · ${f} F</span></div><div class="stack"><div class="M" style="width:${100*m/t}%"></div><div class="F" style="width:${100*f/t}%"></div></div></div>`}}
+draw('noi',noi);draw('cl',cl);
+</script></main></body></html>

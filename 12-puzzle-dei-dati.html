@@ -1,0 +1,23 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Il puzzle dei dati</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.ind{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:21px}.ind input[type=checkbox]{width:26px;height:26px}.ind input[type=number]{width:90px;text-align:center}.ind .r{margin-left:auto;color:var(--mute);min-width:150px;text-align:right}
+.num{font-size:64px;font-weight:800;text-align:center;padding:10px}.trov{color:var(--rosso)}
+</style></head><body><main>
+<h1>Il puzzle dei dati</h1><p class="sub">Ogni indizio sembra innocuo. Insieme, trovano una persona. (Dati inventati.)</p>
+<div class="card"><div class="row" style="justify-content:center;gap:10px"><span class="mute">Abitanti del paese</span><input type="number" id="ab" value="5000" style="width:130px;text-align:center"></div><div class="num" id="n">5000</div><div class="mute" style="text-align:center" id="t">persone potrebbero essere lei</div></div>
+<div class="card" style="margin-top:14px" id="lista"></div>
+<div class="row" style="margin-top:14px"><button id="reset">Ricomincia</button></div>
+<script>
+const ind=[["frequenta la terza media",3,true],["vive nel nostro paese",100,true],["gioca a pallavolo",8,true],["si allena il martedì alle 18",30,true],["ha un fratello gemello",1,false],["ha un cane bianco",10,false]];
+const L=document.getElementById('lista');ind.forEach((d,i)=>{L.innerHTML+=`<div class="ind"><input type="checkbox" ${d[2]?'checked':''} data-i="${i}"><span>${d[0]}</span><span class="mute">su 100:</span><input type="number" value="${d[1]}" data-i="${i}"><span class="r" id="r${i}"></span></div>`});
+function calc(){let n=parseInt(document.getElementById('ab').value)||0;const cb=[...L.querySelectorAll('input[type=checkbox]')],nu=[...L.querySelectorAll('input[type=number]')];cb.forEach((c,i)=>{if(c.checked){n=n*(parseInt(nu[i].value)||0)/100;document.getElementById('r'+i).textContent='restano '+Math.max(1,Math.round(n))}else document.getElementById('r'+i).textContent=''});const N=document.getElementById('n');N.textContent=n<=1?'1':Math.round(n);N.classList.toggle('trov',n<=1.5);document.getElementById('t').textContent=n<=1.5?'Trovata.':'persone potrebbero essere lei'}
+L.addEventListener('input',calc);document.getElementById('ab').addEventListener('input',calc);document.getElementById('reset').onclick=()=>{L.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);calc()};calc();
+</script></main></body></html>

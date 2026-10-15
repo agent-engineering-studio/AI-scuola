@@ -1,0 +1,21 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Misuratore di titoli</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+textarea{width:100%;min-height:110px;font-size:22px}.t{font-size:24px;line-height:1.6;margin-top:12px}mark{padding:2px 4px;border-radius:4px}.emo{background:#ffc9c9}.urg{background:#ffd8a8}.vag{background:#d0bfff}.mai{background:#fff3bf}
+.sc{display:flex;gap:16px;margin-top:14px}.sc .card{flex:1}.sc .n{font-size:46px;font-weight:800}.leg{font-size:16px;color:var(--mute);margin-top:10px}
+</style></head><body><main>
+<h1>Misuratore di titoli</h1><p class="sub">Incolla un titolo. L'app conta le tecniche che la classe ha imparato a riconoscere.</p>
+<div class="card"><textarea id="in">SCANDALO! Da lunedì nella scuola media di Rocca Serena i compiti saranno VIETATI. Lo ha deciso il preside dopo che un esperto ha rivelato che fanno male al cervello. I genitori sono furiosi. Condividi prima che la cancellino!</textarea><div class="t" id="out"></div><div class="leg">■ rosso: emozione · ■ arancio: urgenza · ■ viola: fonte vaga · ■ giallo: tutto maiuscolo</div></div>
+<div class="sc"><div class="card"><div class="mute">Cliccabilità</div><div class="n" style="color:var(--rosso)" id="c">0</div></div><div class="card"><div class="mute">Informazioni verificabili</div><div class="n" style="color:var(--verde)" id="v">0</div><div class="mute" id="vd"></div></div></div>
+<script>
+const emo=["scandalo","furiosi","incredibile","pericolosissimo","male al cervello","senza parole"],urg=["subito","adesso","prima che","condividi","inoltralo"],vag=["un esperto","i medici","uno scienziato","gli esperti","un famoso"];
+function run(){let t=document.getElementById('in').value,h=t,n={e:0,u:0,v:0,m:0};const rep=(list,cls,k)=>list.forEach(w=>{const re=new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');h=h.replace(re,m=>{n[k]++;return `<mark class="${cls}">${m}</mark>`})});rep(emo,'emo','e');rep(urg,'urg','u');rep(vag,'vag','v');h=h.replace(/\b[A-ZÀ-Ù]{4,}\b/g,m=>{n.m++;return `<mark class="mai">${m}</mark>`});const ex=(t.match(/!/g)||[]).length;document.getElementById('out').innerHTML=h;document.getElementById('c').textContent=Math.min(10,n.e*2+n.u*2+n.v+n.m+ex)+' / 10';const date=/\b(19|20)\d\d\b|\b\d{1,2} (gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\b/i.test(t),nome=/\b(preside|sindaco|professor[e]?|dott\.?)\s+[A-Z][a-z]+/.test(t);const v=(date?4:0)+(nome?4:0)+(/\bvia\b|\bpiazza\b/i.test(t)?2:0);document.getElementById('v').textContent=v+' / 10';document.getElementById('vd').textContent=(date?'data ✔ ':'manca la data · ')+(nome?'nome ✔':'nessun nome')}
+document.getElementById('in').addEventListener('input',run);run();
+</script></main></body></html>

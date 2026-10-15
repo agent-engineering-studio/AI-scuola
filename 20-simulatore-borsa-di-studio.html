@@ -1,0 +1,23 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Simulatore della borsa di studio</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.sl{display:flex;align-items:center;gap:12px;margin-bottom:10px;font-size:19px}.sl input{flex:1}.sl b{width:170px}.sl span{width:30px;text-align:right}
+table{width:100%;border-collapse:collapse;font-size:18px}td,th{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}tr.w{background:#d3f9d8;font-weight:700}.nota{color:var(--rosso);font-size:16px;font-weight:400}
+</style></head><body><main>
+<h1>Simulatore della borsa di studio</h1><p class="sub">Tre borse, dieci candidati inventati. Le regole le decidete voi con i cursori.</p>
+<div class="grid2" style="grid-template-columns:1fr 1.6fr">
+<div class="card"><div class="sl"><b>Media dei voti</b><input type="range" id="pm" min="0" max="10" value="10"><span id="vm">10</span></div><div class="sl"><b>Assenze (tolgono)</b><input type="range" id="pa" min="0" max="10" value="6"><span id="va">6</span></div><div class="sl"><b>Reddito basso (aggiunge)</b><input type="range" id="pr" min="0" max="10" value="0"><span id="vr">0</span></div>
+<div class="mute" style="margin-top:10px" id="formula"></div><div class="row" style="margin-top:12px"><button class="p" id="note">Leggi le note</button></div></div>
+<div class="card"><table id="tb"></table></div></div>
+<script>
+const C=[["A",8.9,3,4,"nessuna"],["B",7.4,1,31,"assiste il nonno malato quando i genitori lavorano"],["C",8.2,2,6,"nessuna"],["D",7.1,1,12,"lavora il pomeriggio nel negozio di famiglia"],["E",8.7,3,2,"nessuna"],["F",7.8,2,9,"ha cambiato scuola a metà anno per un trasferimento"],["G",6.9,1,8,"in Italia da due anni, sta ancora imparando la lingua"],["H",8.0,2,5,"nessuna"],["I",7.6,1,20,"un lungo ricovero in ospedale a novembre"],["L",8.4,3,3,"nessuna"]];const R={1:"basso",2:"medio",3:"alto"};let mostra=false;
+function calc(){const pm=+document.getElementById('pm').value,pa=+document.getElementById('pa').value,pr=+document.getElementById('pr').value;['m','a','r'].forEach(k=>document.getElementById('v'+k).textContent=document.getElementById('p'+k).value);document.getElementById('formula').innerHTML=`<b>Formula:</b> punti = media × ${pm} − assenze × ${pa} + (reddito basso ? ${pr*10} : 0)`;const rows=C.map(c=>({c,p:c[1]*pm-c[3]*pa+(c[2]==1?pr*10:0)})).sort((x,y)=>y.p-x.p);document.getElementById('tb').innerHTML='<tr><th>#</th><th>Media</th><th>Reddito</th><th>Assenze</th><th>Punti</th></tr>'+rows.map((r,i)=>`<tr class="${i<3?'w':''}"><td>${r.c[0]}</td><td>${r.c[1].toFixed(1).replace('.',',')}</td><td>${R[r.c[2]]}</td><td>${r.c[3]}</td><td>${Math.round(r.p)}${mostra&&i>=3&&r.c[4]!='nessuna'?` <span class="nota">· ${r.c[4]}</span>`:''}</td></tr>`).join('')}
+document.querySelectorAll('input[type=range]').forEach(i=>i.addEventListener('input',calc));document.getElementById('note').onclick=()=>{mostra=!mostra;calc()};mostra=true;calc();
+</script></main></body></html>

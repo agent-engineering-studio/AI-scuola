@@ -1,0 +1,30 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Semplificatore a tre livelli</title><style>:root{--bg:#fbf7ef;--ink:#1f2a37;--acc:#d9480f;--soft:#fff;--line:#e6ddcc;--mute:#5b6672;--verde:#2f9e44;--giallo:#f08c00;--rosso:#e03131;--blu:#1971c2}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:22px}
+main{max-width:1000px;margin:0 auto;padding:30px 24px 44px}h1{font-size:34px;margin:0 0 6px}.sub{color:var(--mute);margin:0 0 24px;font-size:18px}
+.card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+button{font-size:21px;padding:13px 22px;border-radius:13px;border:0;cursor:pointer;font-weight:700;background:#e9e1d2;color:var(--ink)}
+button.p{background:var(--acc);color:#fff}input,textarea,select{font-size:21px;padding:10px 12px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:inherit}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.mute{color:var(--mute);font-size:18px}.big{font-size:38px;line-height:1.3}.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:16px;font-weight:700;color:#fff}
+.bar{height:14px;background:#f1e9da;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:var(--acc)}
+
+.tabs{display:flex;gap:8px;margin-bottom:14px}.tabs button{flex:1;font-size:19px}.tabs button.on{background:var(--acc);color:#fff}
+.par{font-size:28px;line-height:1.8;padding:28px 32px;min-height:220px}.par u{text-decoration:underline dotted 3px var(--acc);cursor:pointer;position:relative}.par u:hover::after{content:attr(data-o);position:absolute;left:0;top:110%;background:var(--ink);color:#fff;font-size:18px;padding:6px 10px;border-radius:8px;white-space:nowrap}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+</style></head><body><main>
+<h1 style="font-size:26px">Semplificatore a tre livelli</h1>
+<div class="tabs" id="tabs"><button data-l="0">Originale</button><button data-l="1">Frasi corte</button><button data-l="2" class="on">Parole facili</button><button data-l="3">Con esempi</button></div>
+<div class="card par" id="p"></div>
+<div class="nav"><button id="prev">◀</button><span class="mute" id="st"></span><button class="p" id="leggi">🔊 Leggimi</button><button id="next">▶</button></div>
+<p class="mute" style="font-size:16px">Le parole sottolineate sono state sostituite: toccale per vedere l'originale.</p>
+<script>
+const V=[
+["Nel 1095 papa Urbano II, durante il concilio di Clermont, esortò la cristianità occidentale a intraprendere una spedizione armata per sottrarre Gerusalemme al dominio musulmano, promettendo l'indulgenza ai partecipanti.","La risposta superò ogni aspettativa: oltre ai cavalieri si misero in cammino moltitudini di contadini e diseredati, guidati da predicatori come Pietro l'Eremita."],
+["Nel 1095 il papa Urbano II parlò a una grande riunione a Clermont. Chiese ai cristiani di partire con le armi. Dovevano togliere Gerusalemme ai musulmani. A chi partiva promise il perdono dei peccati.","Risposero moltissime persone. Non solo cavalieri. Anche contadini e poveri si misero in viaggio. Li guidavano predicatori come Pietro l'Eremita."],
+["Nel 1095 il papa Urbano II parlò a una grande riunione [concilio] a Clermont. Chiese ai cristiani di partire con le armi. Dovevano togliere Gerusalemme ai musulmani. A chi partiva promise il perdono dei peccati [indulgenza].","Risposero moltissime persone. Non solo cavalieri. Anche contadini e poveri [diseredati] si misero in viaggio. Li guidavano uomini che parlavano in pubblico di religione [predicatori], come Pietro l'Eremita."],
+["Nel 1095 il papa Urbano II parlò a una grande riunione a Clermont, come quando il preside parla a tutta la scuola in palestra. Chiese ai cristiani di partire con le armi per togliere Gerusalemme ai musulmani. A chi partiva promise il perdono dei peccati: come se un debito venisse cancellato.","Risposero moltissime persone, molte più di quelle che il papa si aspettava. Non solo cavalieri: anche contadini e poveri, gente che non aveva mai combattuto. Li guidavano predicatori come Pietro l'Eremita, persone che sapevano convincere parlando, come oggi certi influencer."]];
+let l=2,i=0;function fmt(s){return s.replace(/(\S+)\s\[([^\]]+)\]/g,'<u data-o="originale: $2">$1</u>')}
+function show(){document.getElementById('p').innerHTML=fmt(V[l][i]);document.getElementById('st').textContent=`Paragrafo ${i+1} di ${V[0].length}`;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',+b.dataset.l==l))}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{l=+b.dataset.l;show()});document.getElementById('next').onclick=()=>{if(i<V[0].length-1){i++;show()}};document.getElementById('prev').onclick=()=>{if(i>0){i--;show()}};
+document.getElementById('leggi').onclick=()=>{if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(document.getElementById('p').innerText);u.lang='it-IT';u.rate=.9;speechSynthesis.speak(u)};show();
+</script></main></body></html>
